@@ -9,7 +9,7 @@ enum FlutterSliderStyle {
   n2, // 切换同行，排版居左
   n3,
 }
-typedef  DragUpdateCallback = void Function (double offset, double r);
+typedef  DragUpdateCallback = void Function(double offset, double r);
 typedef  UpdateIndexCallback = void Function(int index);
 
 class FlutterSlider extends StatefulWidget {
@@ -44,7 +44,7 @@ class FlutterSlider extends StatefulWidget {
     this.width,
     this.itemWidth,
     this.scale = 0.8, 
-    this.style = FlutterSliderStyle.def, 
+    this.style = FlutterSliderStyle.def,
     this.initLeftOffset = 0.0,
     this.onDragDown,
     this.onDragUpdate,
@@ -324,13 +324,13 @@ class _FluterSliderState extends State<FlutterSlider>
 
   void onHorizontalDragDown(DragDownDetails details) {
     animationScalController.forward();
+    _stopPlay();
     if(widget.onDragDown != null) {
       widget.onDragDown();
     }
   }
 
   void onHorizontalDragStart(DragStartDetails details) {
-    _stopPlay();
   }
 
   void onHorizontalDragUpdate(DragUpdateDetails details) {
@@ -361,7 +361,13 @@ class _FluterSliderState extends State<FlutterSlider>
     }
   }
 
-  void onHorizontalDragCancel() {}
+  void onHorizontalDragCancel() {
+    animationScalController.reverse();
+    _startPlay(); // 手动结束自动播放
+    if(widget.onDragEnd != null) {
+      widget.onDragEnd();
+    }
+  }
 
   void onHorizontalDragEnd(DragEndDetails details) {
     setState(() {
@@ -540,7 +546,8 @@ class _FluterSliderState extends State<FlutterSlider>
         onHorizontalDragUpdate: onHorizontalDragUpdate,
         onHorizontalDragCancel: onHorizontalDragCancel,
         onHorizontalDragEnd: onHorizontalDragEnd,
-        child: Container(
+        child: ConstrainedBox(
+          constraints: BoxConstraints.expand(width: widget.width),
           child: CustomMultiChildLayout(
             delegate: new _SliderMultiChildLayout(
               count: widget.children.length,

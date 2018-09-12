@@ -47,11 +47,11 @@ class _MyAppState extends State<MyApp> {
             width: MediaQuery.of(context).size.width,
             height: 300.0,
             child: FlutterSlider(
-              scale: 0.15,
+              scale: 0.80,
               width: MediaQuery.of(context).size.width,
               itemWidth: 230.0,
-              initLeftOffset: 12.0,
-              style: FlutterSliderStyle.n2,
+              // initLeftOffset: 12.0,
+              style: FlutterSliderStyle.def,
               sliderController: sliderController,
               autoPlay: true,
               onDragUpdate: (double offset, double r){

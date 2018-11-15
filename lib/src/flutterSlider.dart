@@ -34,6 +34,7 @@ class FlutterSlider extends StatefulWidget {
   final VoidCallback onDragDown;
   final DragUpdateCallback onDragUpdate;
   final VoidCallback onDragEnd;
+  final VoidCallback onDragCancel;
   final UpdateIndexCallback onUpdateIndex;
 
   final FlutterSliderController sliderController;
@@ -49,6 +50,7 @@ class FlutterSlider extends StatefulWidget {
     this.onDragDown,
     this.onDragUpdate,
     this.onDragEnd,
+    this.onDragCancel,
     this.onUpdateIndex,
     this.sliderController,
     this.autoPlay = true,
@@ -317,6 +319,10 @@ class _FluterSliderState extends State<FlutterSlider>
         : index < 0 ? widget.children.length - 1 : index;
     if(nextIndex != activeIndex && widget.onUpdateIndex != null) {
       widget.onUpdateIndex(nextIndex);
+    }else{
+      if(widget.onDragCancel != null) {
+        widget.onDragCancel();
+      }
     }
     return nextIndex;
   }
@@ -364,8 +370,8 @@ class _FluterSliderState extends State<FlutterSlider>
   void onHorizontalDragCancel() {
     animationScalController.reverse();
     _startPlay(); // 手动结束自动播放
-    if(widget.onDragEnd != null) {
-      widget.onDragEnd();
+    if(widget.onDragCancel != null) {
+      widget.onDragCancel();
     }
   }
 
